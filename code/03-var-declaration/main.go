@@ -8,6 +8,10 @@ import "fmt"
 
 var y = 43
 
+var b string
+
+var g string = "This is another text"
+
 //DECLARE there is a variable with the identifier "z"
 //is VARIABLE with the IDENTIFIER "z" is of TYPE int
 //   ASSIGNS the ZERO VALUE of type int
@@ -26,7 +30,28 @@ func main() {
 
 	foo()
 
+	//when initialize without assignment
+
+	var a int
+	var h string
+	var c float64
+	var d bool
+
 	fmt.Println(z)
+	b = "this is a string"
+	fmt.Println(b)
+
+	fmt.Printf("%v", a)
+	fmt.Printf("%v", h)
+	fmt.Printf("%v", c)
+	fmt.Printf("%v", d)
+
+	fmt.Println(" ")
+
+	fmt.Printf("%T\n", a)
+	fmt.Printf("%T\n", h)
+	fmt.Printf("%T\n", c)
+	fmt.Printf("%T\n", d)
 
 }
 func foo() {
