@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/dkr290/go-programs/code/01-scope/visibility/vis"
+	"github.com/dkr290/go-programs/code/02-scope/visibility/viz"
 )
 
 func main() {
-	fmt.Println(vis.MyName)
-	vis.PrintVar()
+	fmt.Println(viz.MyName)
+	viz.PrintVar()
 }
