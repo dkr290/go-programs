@@ -8,6 +8,16 @@ func main() {
 
 	// they are reference types
 
+	// defining maps
+
+	/*
+		     m := make(map[string]int)
+			 m := map[string]int{} // to create not nil map
+		     m := map[string]int{"key1":3,"key2":3}
+			 var m = make(map[string][string])
+
+	*/
+
 	m := make(map[string]int)
 
 	m["k1"] = 7
@@ -73,4 +83,25 @@ func main() {
 		fmt.Printf("The key %s  value :  %s\n", k, v)
 	}
 
+	fmt.Println("#############################  another  ############################")
+
+	mygreeting4 := map[int]string{
+
+		1: "Good Morning",
+		2: "Bonjour",
+		3: "Boenos dias",
+		4: "Bongiorno",
+	}
+
+	fmt.Println(mygreeting4)
+
+	if val, exists := mygreeting4[2]; exists {
+		delete(mygreeting4, 2)
+		fmt.Println("val", val)
+		fmt.Println("exists", exists)
+	} else {
+		fmt.Println("The value does not exists")
+		fmt.Println("val", val)
+		fmt.Println("exists", exists)
+	}
 }
