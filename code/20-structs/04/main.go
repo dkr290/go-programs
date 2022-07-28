@@ -8,24 +8,23 @@ type person struct {
 	age   int
 }
 
-func (p person) fullName() string {
-
-	return p.fname + " " + p.lname
-
-}
+type foo int
 
 func main() {
+
 	p1 := person{
 		fname: "James",
 		lname: "Bond",
-		age:   31,
+		age:   20,
 	}
-	p2 := person{
-		fname: "Miss",
-		lname: "MoneyPenny",
-		age:   24,
-	}
-	fmt.Println(p1.fullName())
-	fmt.Println(p2.fullName())
+
+	p2 := person{"Miss", "Moneypenny", 18}
+
+	fmt.Println(p1.fname, p1.lname, p1.age)
+	fmt.Println(p2.fname, p2.lname, p2.age)
+
+	var myAge foo
+	myAge = 91
+	fmt.Printf("%T %v \n", myAge, myAge)
 
 }
