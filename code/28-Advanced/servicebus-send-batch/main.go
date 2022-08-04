@@ -1,11 +1,13 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"fmt"
-
 	"os"
+	"strconv"
 
-	servicebus "github.com/Azure/azure-service-bus-go"
+	"github.com/Azure/azure-sdk-for-go/sdk/messaging/azservicebus"
 )
 
 func main() {
@@ -18,59 +20,79 @@ func main() {
 
 	//defer cancel()
 
-	connStr := os.Getenv("SERVICEBUS_CONNECTION_STRING")
+	connectionString := os.Getenv("SERVICEBUS_CONNECTION_STRING")
+	tTopic := os.Getenv("TOPIC")
 
-	tName := os.Getenv("TOPIC_NAME")
-
-	sSubs := os.Getenv("SUBSCRIPTION_NAME")
-
-	if connStr == "" || tName == "" || sSubs == "" {
-
-		fmt.Println("FATAL: expected environment variables SERVICEBUS_CONNECTION_STRING or TOPIC_NAME oe SUBSCRIPTION_NAME not set")
-
-		return
-
+	client, err := azservicebus.NewClientFromConnectionString(connectionString, nil)
+	if err != nil {
+		panic(err)
 	}
-
-	// Create a client to communicate with a Service Bus Namespace.
-
-	ns, err := servicebus.NewNamespace(servicebus.NamespaceWithConnectionString(connStr))
+	sender, err := client.NewSender(tTopic, nil)
 
 	if err != nil {
-
-		fmt.Println(err)
-
-		return
-
+		panic(err)
 	}
 
-	topic, err := ns.NewTopic(tName)
+	// close the sender when it's no longer needed
+	defer sender.Close(context.TODO())
+
+	// Create a message batch. It will automatically be sized for the Service Bus
+	// Namespace's maximum message size.
+	currentMessageBatch, err := sender.NewMessageBatch(context.TODO(), nil)
 
 	if err != nil {
-
-		fmt.Println(err)
-
-		return
+		panic(err)
+	}
+	var messagesToSend []string
+	for i := 0; i < 10000; i++ {
+		messagesToSend = append(messagesToSend, "This_Is_test"+strconv.Itoa(i))
 
 	}
 
-	// Create topic receiver
+	for i := 0; i < len(messagesToSend); i++ {
+		// Add a message to our message batch. This can be called multiple times.
+		err = currentMessageBatch.AddMessage(&azservicebus.Message{Body: []byte(messagesToSend[i])}, nil)
 
-	subs, err := topic.NewSubscription(sSubs)
+		if errors.Is(err, azservicebus.ErrMessageTooLarge) {
+			if currentMessageBatch.NumMessages() == 0 {
+				// This means the message itself is too large to be sent, even on its own.
+				// This will require intervention from the user.
+				panic("Single message is too large to be sent in a batch.")
+			}
 
-	if err != nil {
+			fmt.Printf("Message batch is full. Sending it and creating a new one.\n")
 
-		fmt.Println(err)
+			// send what we have since the batch is full
+			err := sender.SendMessageBatch(context.TODO(), currentMessageBatch, nil)
 
-		return
+			if err != nil {
+				panic(err)
+			}
 
+			// Create a new batch and retry adding this message to our batch.
+			newBatch, err := sender.NewMessageBatch(context.TODO(), nil)
+
+			if err != nil {
+				panic(err)
+			}
+
+			currentMessageBatch = newBatch
+
+			// rewind the counter and attempt to add the message again (this batch
+			// was full so it didn't go out with the previous SendMessageBatch call).
+			i--
+		} else if err != nil {
+			panic(err)
+		}
 	}
 
-	messages := []string{"foo", "bar", "bazz", "buzz"}
-	for _, msg := range messages {
-		//topic.Send(ctx, servicebus.NewMessageFromString(msg))
-		//subs.Send(ctx, servicebus.NewMessageFromString(msg))
-		fmt.Println(msg)
-	}
+	// check if any messages are remaining to be sent.
+	if currentMessageBatch.NumMessages() > 0 {
+		err := sender.SendMessageBatch(context.TODO(), currentMessageBatch, nil)
 
+		if err != nil {
+			panic(err)
+		}
+
+	}
 }
