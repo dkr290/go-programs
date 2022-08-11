@@ -1,5 +1,5 @@
-// Package acdc ask if you are ready to rock
-package acdc
+// Package sumutil ask if you are ready to rock
+package sumutil
 
 // Sum adds an unlimited values of type int
 func Sum(xi ...int) int {
