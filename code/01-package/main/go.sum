@@ -1,2 +1,4 @@
 github.com/dkr290/go-programs v0.0.0-20220716144141-02a369e7a381 h1:ilbL9e8e8oZVCGymArEl9mV3xWotzL+yLL1rGmXXjLQ=
 github.com/dkr290/go-programs v0.0.0-20220716144141-02a369e7a381/go.mod h1:f/OYJZVXClRKj07rl/DjSqjrrtc9YDn9Y0vsUN6faKk=
+github.com/dkr290/go-programs v0.0.0-20220811203506-2e42d9ce5f95 h1:jia2l44siTUJtKnKWpnux/pf+xL1KKUcWnjRV6aUB54=
+github.com/dkr290/go-programs v0.0.0-20220811203506-2e42d9ce5f95/go.mod h1:f/OYJZVXClRKj07rl/DjSqjrrtc9YDn9Y0vsUN6faKk=
