@@ -1,4 +1,3 @@
-module acdc
+module myapp
 
 go 1.18
-
