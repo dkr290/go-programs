@@ -1,5 +1,6 @@
 package main
 
+//we need to do go mod download github.com/dkr290/go-programs
 import (
 	"fmt"
 
