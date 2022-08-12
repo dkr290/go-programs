@@ -6,6 +6,7 @@ import (
 	"github.com/dkr290/go-programs/code/package-benchmark/saying"
 )
 
+//test
 func main() {
-	fmt.Println(saying.Say("James"))
+	fmt.Println(saying.Greet("James"))
 }
