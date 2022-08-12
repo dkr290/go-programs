@@ -1,3 +1,4 @@
+// Package sumutil ask if you are ready to rock
 package saying
 
 import "fmt"
