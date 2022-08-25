@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 
 	"golang.org/x/crypto/ssh"
 )
@@ -13,17 +14,22 @@ import (
 func main() {
 
 	argsWithProg := os.Args
+	var s string
+
+	path, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+	s = filepath.Base(path)
 
 	if argsWithProg[1] == "help" {
-		hlp := `
-		 ssh-remote <hostname or ip address> <username> <path to the private key> "<command to execute/ or if multiple commands in brackets>"
-		`
+		hlp := s + ` <hostname or ip address> <username> <path to the private key> "<command to execute/ or if multiple commands in brackets>"`
 		fmt.Println(hlp)
 		return
 
 	}
 	if len(argsWithProg) != 5 {
-		fmt.Println("ssh-remote <hostname or ip address> <username> <path to the private key>", "<command to execute/ or if multiple commands in brackets>")
+		fmt.Println(s+" <hostname or ip address> <username> <path to the private key>", "<command to execute/ or if multiple commands in brackets>")
 
 		return
 	} else {
